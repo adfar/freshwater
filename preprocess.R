@@ -9,5 +9,8 @@ lakes <- lakes[[2]] |>
   clean_names() |> 
   filter(salinity == "Fresh")
 
+lakes$name <- sub("\\[.*\\]", "", lakes$name)
+lakes <- lakes |> 
+  separate(col = surface_area, into = c("km2", "mi2"), sep = " km2 ")
 
 
