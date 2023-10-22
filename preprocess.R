@@ -22,6 +22,6 @@ lakes <- lakes |>
   separate(col = water_volume, into = c("km3", "mi3"), sep = "km3") |> #vostok has a superscript so km3 doesn't work
   mutate(km2 = str_trim(km2), mi2 = gsub("[^0-9~,]+", "", mi2), km3 = str_trim(km3), mi3 = gsub("[^0-9~,]+", "", mi3))
 
-
+write_csv(lakes, "~/projects/freshwater/data/lakes.csv")
 
 
