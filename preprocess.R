@@ -23,14 +23,7 @@ lakes <- lakes |>
   mutate(km2 = gsub("[^0-9]+", "", km2), mi2 = gsub("[^0-9]+", "", mi2), km3 = gsub("[^0-9]+", "", km3), mi3 = gsub("[^0-9]+", "", mi3)) |> 
   mutate(across(all_of(c("km2", "km3", "mi2", "mi3")), as.numeric))
 
-lakes |> 
-  select(km2:mi3)
-
-region_volume <- lakes |> 
-  group_by(region) |>
-  summarize(total_volume_km = sum(km3), total_volume_mi = sum(mi3))
-
 write_csv(lakes, "~/projects/freshwater/data/lakes.csv")
-write_csv(agg, "~/projects/freshwater/data/region_volume.csv")
+
 
 
