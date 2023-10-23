@@ -9,7 +9,7 @@ lakes <- lakes[[2]] |>
   clean_names() |> 
   filter(salinity == "Fresh") |> 
   #remove superscript in water_volume for Vostok
-  mutate(water_volume = ifelse(name == "Vostok", "5,400±1,600 km3 (~1,300 cu mi)", water_volume))
+  mutate(water_volume = ifelse(name == "Vostok", "5,400 km3 (~1,300 cu mi)", water_volume))
 
 
 
@@ -20,8 +20,17 @@ lakes$name <- sub("\\[.*\\]", "", lakes$name)
 lakes <- lakes |> 
   separate(col = surface_area, into = c("km2", "mi2"), sep = "km2") |> 
   separate(col = water_volume, into = c("km3", "mi3"), sep = "km3") |> #vostok has a superscript so km3 doesn't work
-  mutate(km2 = str_trim(km2), mi2 = gsub("[^0-9~,]+", "", mi2), km3 = str_trim(km3), mi3 = gsub("[^0-9~,]+", "", mi3))
+  mutate(km2 = gsub("[^0-9]+", "", km2), mi2 = gsub("[^0-9]+", "", mi2), km3 = gsub("[^0-9]+", "", km3), mi3 = gsub("[^0-9]+", "", mi3)) |> 
+  mutate(across(all_of(c("km2", "km3", "mi2", "mi3")), as.numeric))
+
+lakes |> 
+  select(km2:mi3)
+
+region_volume <- lakes |> 
+  group_by(region) |>
+  summarize(total_volume_km = sum(km3), total_volume_mi = sum(mi3))
 
 write_csv(lakes, "~/projects/freshwater/data/lakes.csv")
+write_csv(agg, "~/projects/freshwater/data/region_volume.csv")
 
 
